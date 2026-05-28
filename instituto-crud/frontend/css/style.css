@@ -14,7 +14,8 @@ body{
 /* NAVBAR */
 
 .navbar{
-    background-color: #111827;
+    background-color: #6c7486;
+    /*background-color: #111827*/
     color: white;
     padding: 20px;
     text-align: center;
@@ -64,7 +65,7 @@ body{
 
 #formAlumno button{
     padding: 12px 20px;
-    background-color: #111827;
+    background-color: #6c7486;
     color: white;
     border: none;
     border-radius: 8px;
@@ -144,9 +145,20 @@ body{
 /* FOOTER */
 
 .footer{
-    background-color: #111827;
+    background-color: #6c7486;
     color: white;
     text-align: center;
     padding: 15px;
     margin-top: 40px;
+}
+.logo{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img{
+    width: 80px;
+    height: 60px;
+    object-fit: contain;
 }
