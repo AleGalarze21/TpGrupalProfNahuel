@@ -1,133 +1,177 @@
+require("dotenv").config();
+
 const express = require("express");
+const { PrismaClient } = require("@prisma/client");
+const { PrismaMariaDb } = require("@prisma/adapter-mariadb");
 
 const router = express.Router();
 
-const { PrismaClient } = require("@prisma/client");
+const adapter = new PrismaMariaDb(process.env.DATABASE_URL);
 
-const prisma = new PrismaClient();
-
-
+const prisma = new PrismaClient({
+    adapter
+});
 
 // ==========================================
 // GET
 // ==========================================
 
 router.get("/", async (req, res) => {
+    try {
+        const alumnos = await prisma.alumno.findMany({
+            orderBy: {
+                id: "desc"
+            }
+        });
 
-    const alumnos = await prisma.alumno.findMany();
+        res.json(alumnos);
 
-    res.json(alumnos);
+    } catch (error) {
+        console.error(error);
 
+        res.status(500).json({
+            error: "Error al obtener alumnos"
+        });
+    }
 });
-
-
 
 // ==========================================
 // GET POR ID
 // ==========================================
 
 router.get("/:id", async (req, res) => {
+    try {
+        const id = Number(req.params.id);
 
-    const id = parseInt(req.params.id);
+        const alumno = await prisma.alumno.findUnique({
+            where: { id }
+        });
 
-    const alumno = await prisma.alumno.findUnique({
+        if (!alumno) {
+            return res.status(404).json({
+                error: "Alumno no encontrado"
+            });
+        }
 
-        where: { id }
+        res.json(alumno);
 
-    });
+    } catch (error) {
+        console.error(error);
 
-    res.json(alumno);
-
+        res.status(500).json({
+            error: "Error al buscar alumno"
+        });
+    }
 });
-
-
 
 // ==========================================
 // POST
 // ==========================================
 
 router.post("/", async (req, res) => {
+    try {
+        const { nombre, apellido, email, curso, edad } = req.body;
 
-    const { nombre, apellido, email, curso, edad } = req.body;
-
-    const nuevoAlumno = await prisma.alumno.create({
-
-        data: {
-
-            nombre,
-
-            apellido,
-
-            email,
-
-            curso,
-
-            edad: parseInt(edad)
+        if (!nombre || !apellido || !email || !curso || !edad) {
+            return res.status(400).json({
+                error: "Todos los campos son obligatorios"
+            });
         }
-    });
 
-    res.json(nuevoAlumno);
+        const nuevoAlumno = await prisma.alumno.create({
+            data: {
+                nombre,
+                apellido,
+                email,
+                curso,
+                edad: Number(edad)
+            }
+        });
 
+        res.status(201).json(nuevoAlumno);
+
+    } catch (error) {
+        console.error(error);
+
+        if (error.code === "P2002") {
+            return res.status(409).json({
+                error: "El email ya está registrado"
+            });
+        }
+
+        res.status(500).json({
+            error: "Error al crear alumno"
+        });
+    }
 });
-
-
 
 // ==========================================
 // PUT
 // ==========================================
 
 router.put("/:id", async (req, res) => {
+    try {
+        const id = Number(req.params.id);
 
-    const id = parseInt(req.params.id);
+        const { nombre, apellido, email, curso, edad } = req.body;
 
-    const { nombre, apellido, email, curso, edad } = req.body;
+        const alumnoActualizado = await prisma.alumno.update({
+            where: { id },
+            data: {
+                nombre,
+                apellido,
+                email,
+                curso,
+                edad: Number(edad)
+            }
+        });
 
-    const alumnoActualizado = await prisma.alumno.update({
+        res.json(alumnoActualizado);
 
-        where: { id },
+    } catch (error) {
+        console.error(error);
 
-        data: {
-
-            nombre,
-
-            apellido,
-
-            email,
-
-            curso,
-
-            edad: parseInt(edad)
+        if (error.code === "P2025") {
+            return res.status(404).json({
+                error: "Alumno no encontrado"
+            });
         }
-    });
 
-    res.json(alumnoActualizado);
-
+        res.status(500).json({
+            error: "Error al actualizar alumno"
+        });
+    }
 });
-
-
 
 // ==========================================
 // DELETE
 // ==========================================
 
 router.delete("/:id", async (req, res) => {
+    try {
+        const id = Number(req.params.id);
 
-    const id = parseInt(req.params.id);
+        await prisma.alumno.delete({
+            where: { id }
+        });
 
-    await prisma.alumno.delete({
+        res.json({
+            mensaje: "Alumno eliminado"
+        });
 
-        where: { id }
+    } catch (error) {
+        console.error(error);
 
-    });
+        if (error.code === "P2025") {
+            return res.status(404).json({
+                error: "Alumno no encontrado"
+            });
+        }
 
-    res.json({
-
-        mensaje: "Alumno eliminado"
-
-    });
-
+        res.status(500).json({
+            error: "Error al eliminar alumno"
+        });
+    }
 });
-
-
 
 module.exports = router;

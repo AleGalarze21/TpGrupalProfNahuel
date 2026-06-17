@@ -4,22 +4,29 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
-model Alumno {
-
-  id Int @id @default(autoincrement())
-
-  nombre String
-
-  apellido String
-
-  email String @unique
-
-  curso String
-
-  edad Int
-
+model alumno {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  apellido  String
+  email     String   @unique(map: "Alumno_email_key")
+  curso     String
+  edad      Int
   createdAt DateTime @default(now())
+}
+
+model usuario {
+  id        Int         @id @default(autoincrement())
+  nombre    String
+  email     String      @unique(map: "Usuario_email_key")
+  password  String
+  rol       usuario_rol @default(ALUMNO)
+  createdAt DateTime    @default(now())
+}
+
+enum usuario_rol {
+  MASTER
+  ADMIN
+  ALUMNO
 }

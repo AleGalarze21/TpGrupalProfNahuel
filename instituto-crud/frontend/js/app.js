@@ -1,17 +1,35 @@
 // ==========================================
-// VARIABLES
+// CONFIGURACIÓN
 // ==========================================
+console.log("app.js cargado");
 
 const API = "http://localhost:3001/alumnos";
 
 const lista = document.getElementById("listaAlumnos");
-
 const form = document.getElementById("formAlumno");
 
+const usuario = JSON.parse(localStorage.getItem("usuario"));
 
+let idEditando = null;
 
 // ==========================================
-// -- BENJA GET --
+// VALIDACIÓN DE ACCESO
+// ==========================================
+
+if (!usuario) {
+    window.location.href = "inicio.html";
+}
+
+if (usuario.rol === "ALUMNO") {
+    window.location.href = "accesoDenegado.html";
+}
+
+if (usuario.rol !== "MASTER" && usuario.rol !== "ADMIN") {
+    window.location.href = "accesoDenegado.html";
+}
+
+// ==========================================
+// GET
 // ==========================================
 
 async function obtenerAlumnos() {
@@ -20,14 +38,14 @@ async function obtenerAlumnos() {
 
     const alumnos = await res.json();
 
+    console.log(alumnos);
+
     lista.innerHTML = "";
 
     alumnos.forEach(alumno => {
 
         lista.innerHTML += `
-
             <div class="card-alumno">
-
                 <h3>${alumno.nombre} ${alumno.apellido}</h3>
 
                 <p>Email: ${alumno.email}</p>
@@ -38,131 +56,176 @@ async function obtenerAlumnos() {
 
                 <div class="botones">
 
-                    <button 
+                    <button
                         class="editar"
-                        onclick="editarAlumno(${alumno.id})"
-                    >
+                        onclick="editarAlumno(${alumno.id})">
                         Editar
                     </button>
 
-                    <button 
+                    <button
                         class="eliminar"
-                        onclick="eliminarAlumno(${alumno.id})"
-                    >
+                        onclick="eliminarAlumno(${alumno.id})">
                         Eliminar
                     </button>
 
                 </div>
-
             </div>
         `;
     });
 }
 
-
-
 // ==========================================
-// -- CRISTIAN POST --
+// CREATE Y UPDATE
 // ==========================================
 
 form.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
+    const nombre = document.getElementById("nombre").value.trim();
+    const apellido = document.getElementById("apellido").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const curso = document.getElementById("curso").value.trim();
+    const edad = document.getElementById("edad").value;
+
+    // VALIDACIONES
+
+    if (!nombre || !apellido || !email || !curso || !edad) {
+        alert("Todos los campos son obligatorios.");
+        return;
+    }
+
+    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailValido.test(email)) {
+        alert("Ingrese un email válido.");
+        return;
+    }
+
+    if (edad < 16 || edad > 100) {
+        alert("La edad debe estar entre 16 y 100 años.");
+        return;
+    }
+
     const alumno = {
-
-        nombre: document.getElementById("nombre").value,
-
-        apellido: document.getElementById("apellido").value,
-
-        email: document.getElementById("email").value,
-
-        curso: document.getElementById("curso").value,
-
-        edad: document.getElementById("edad").value
+        nombre,
+        apellido,
+        email,
+        curso,
+        edad: Number(edad)
     };
 
-    await fetch(API, {
+    try {
 
-        method: "POST",
+        if (idEditando) {
 
-        headers: {
+            await fetch(`${API}/${idEditando}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(alumno)
+            });
 
-            "Content-Type": "application/json"
-        },
+            idEditando = null;
 
-        body: JSON.stringify(alumno)
-    });
+            form.querySelector("button").textContent =
+                "Agregar Alumno";
 
-    form.reset();
+            alert("Alumno actualizado correctamente.");
 
-    obtenerAlumnos();
+        } else {
 
+            await fetch(API, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(alumno)
+            });
+
+            alert("Alumno agregado correctamente.");
+        }
+
+        form.reset();
+
+        obtenerAlumnos();
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Ocurrió un error al guardar el alumno.");
+    }
 });
 
-
-
 // ==========================================
-// -- ALE PUT --
+// CARGAR DATOS EN FORMULARIO
 // ==========================================
 
 async function editarAlumno(id) {
 
-    const nuevoCurso = prompt("Ingrese el nuevo curso");
+    try {
 
-    if (!nuevoCurso) return;
+        const res = await fetch(`${API}/${id}`);
 
-    const res = await fetch(`${API}/${id}`);
+        const alumno = await res.json();
 
-    const alumno = await res.json();
+        document.getElementById("nombre").value = alumno.nombre;
+        document.getElementById("apellido").value = alumno.apellido;
+        document.getElementById("email").value = alumno.email;
+        document.getElementById("curso").value = alumno.curso;
+        document.getElementById("edad").value = alumno.edad;
 
-    await fetch(`${API}/${id}`, {
+        idEditando = id;
 
-        method: "PUT",
+        form.querySelector("button").textContent =
+            "Guardar Cambios";
 
-        headers: {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
 
-            "Content-Type": "application/json"
-        },
+    } catch (error) {
 
-        body: JSON.stringify({
-
-            nombre: alumno.nombre,
-
-            apellido: alumno.apellido,
-
-            email: alumno.email,
-
-            curso: nuevoCurso,
-
-            edad: alumno.edad
-        })
-    });
-
-    obtenerAlumnos();
+        console.error(error);
+        alert("No se pudo cargar el alumno.");
+    }
 }
 
-
-
 // ==========================================
-// -- JOSE DELETE --
+// DELETE
 // ==========================================
 
 async function eliminarAlumno(id) {
 
-    const confirmar = confirm("¿Desea eliminar este alumno?");
+    if (usuario.rol !== "MASTER") {
+        alert("No tiene permisos para eliminar alumnos.");
+        return;
+    }
+
+    const confirmar = confirm(
+        "¿Desea eliminar este alumno?"
+    );
 
     if (!confirmar) return;
 
-    await fetch(`${API}/${id}`, {
+    try {
 
-        method: "DELETE"
-    });
+        await fetch(`${API}/${id}`, {
+            method: "DELETE"
+        });
 
-    obtenerAlumnos();
+        alert("Alumno eliminado correctamente.");
+
+        obtenerAlumnos();
+
+    } catch (error) {
+
+        console.error(error);
+        alert("No se pudo eliminar el alumno.");
+    }
 }
-
-
 
 // ==========================================
 // INICIAR LISTADO
