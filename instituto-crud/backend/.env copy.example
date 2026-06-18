@@ -1,0 +1,2 @@
+DATABASE_URL="mysql://root:1621@localhost:3306/instituto_db"
+JWT_SECRET="openmindtech2026"
