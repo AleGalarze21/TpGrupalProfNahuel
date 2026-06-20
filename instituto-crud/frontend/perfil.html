@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - OpenMind Tech</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="../logo.png" type="image/png">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            <img src="../logo.png" alt="Logo OpenMind Tech">
+            <h1>OpenMind Tech</h1>
+        </div>
+
+        <div class="nav-menu">
+            <a href="inicio.html">Inicio</a>
+            <a href="crudAlumnos.html">Gestión Alumnos</a>
+            <a href="accesoDenegado.html">Cursos</a>
+            <a href="nosotros.html">Nosotros</a>
+        </div>
+
+        <div class="user-menu">
+
+            <button class="user-btn" id="userBtn">
+                <i class="fa-solid fa-user"></i>
+            </button>
+
+            <div class="dropdown" id="dropdown">
+                <a href="perfil.html">Mi perfil</a>
+                <a href="#" id="cerrarSesion">Cerrar sesión</a>
+            </div>
+
+        </div>
+
+    </nav>
+
+    <main class="contenedor-perfil">
+
+        <div class="perfil-card">
+
+            <div class="perfil-header">
+                <div class="perfil-avatar">
+                    <i class="fa-solid fa-user-graduate"></i>
+                </div>
+
+                <div>
+                    <h2>Mi Perfil</h2>
+                    <p id="rolUsuario">Alumno</p>
+                </div>
+            </div>
+
+            <form id="formPerfil" class="perfil-form">
+
+                <div class="campo">
+                    <label>Nombre</label>
+                    <input type="text" id="nombre">
+                </div>
+
+                <div class="campo">
+                    <label>Apellido</label>
+                    <input type="text" id="apellido">
+                </div>
+
+                <div class="campo">
+                    <label>Fecha de nacimiento</label>
+                    <input type="date" id="fechaNacimiento">
+                </div>
+
+                <div class="campo">
+                    <label>Correo electrónico</label>
+                    <input type="email" id="email">
+                </div>
+
+                <div class="campo">
+                    <label>Comisión</label>
+                    <input type="text" id="comision">
+                </div>
+
+                <div class="campo">
+                    <label>Carrera</label>
+                    <input type="text" id="carrera">
+                </div>
+
+                <div class="campo">
+                    <label>Legajo</label>
+                    <input type="text" id="legajo" readonly>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    Guardar cambios
+                </button>
+
+            </form>
+
+        </div>
+
+    </main>
+
+    <footer class="footer">
+
+        <div class="footer-contenido">
+
+            <div class="footer-logo">
+                <img src="../logo.png" alt="Logo OpenMind Tech">
+                <h3>OpenMind Tech</h3>
+            </div>
+
+            <div class="footer-copy">
+                <p>© 2026 OpenMind Tech - Todos los derechos reservados.</p>
+            </div>
+
+        </div>
+
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/perfil.js"></script>
+
+</body>
+
+</html>

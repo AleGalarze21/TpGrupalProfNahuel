@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenMind Tech</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+
+        <div class="logo">
+            <img src="../logo.png" alt="Logo OpenMind Tech">
+            <h1>OpenMind Tech</h1>
+        </div>
+
+        <div class="nav-menu">
+            <a href="inicio.html">Inicio</a>
+            <a href="crudAlumnos.html">Gestión Alumnos</a>
+            <a href="accesoDenegado.html">Cursos</a>
+            <a href="perfil.html">Alumnos</a>
+            <a href="nosotros.html">Nosotros</a>
+        </div>
+
+        <div class="user-menu">
+
+            <button class="user-btn" id="userBtn">
+                <i class="fa-solid fa-user"></i>
+            </button>
+
+            <div class="dropdown" id="dropdown">
+                <a href="#" id="btnLogin">Iniciar sesión</a>
+                <a href="#" id="btnRegister">Registrarse</a>
+            </div>
+
+        </div>
+
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero-banner">
+        <img src="../OpenMindHero.png" alt="Instituto OpenMind Tech">
+    </section>
+
+    <!-- CONTENIDO -->
+    <section class="presentacion">
+
+        <span class="subtitulo">Bienvenidos</span>
+
+        <h2>Oferta Académica</h2>
+
+        <p>
+            Formamos profesionales preparados para los desafíos del futuro,
+            con educación de calidad, innovación tecnológica y aprendizaje práctico.
+        </p>
+
+    </section>
+
+    <!-- BENEFICIOS -->
+    <section class="beneficios">
+
+        <div class="beneficio-card">
+            <h3>🎓 Educación de calidad</h3>
+            <p>Programas actualizados y orientados al mercado laboral.</p>
+        </div>
+
+        <div class="beneficio-card">
+            <h3>💻 Modalidad flexible</h3>
+            <p>Clases presenciales y virtuales adaptadas a tus necesidades.</p>
+        </div>
+
+        <div class="beneficio-card">
+            <h3>🚀 Salida laboral</h3>
+            <p>Capacitación enfocada en habilidades profesionales.</p>
+        </div>
+
+    </section>
+
+    <!-- CARRERAS -->
+    <section class="oferta">
+
+        <h2>Oferta Académica</h2>
+
+        <div class="oferta-grid">
+
+            <div class="oferta-card">
+                <h3>Programación</h3>
+            </div>
+
+            <div class="oferta-card">
+                <h3>Bases de Datos</h3>
+            </div>
+
+            <div class="oferta-card">
+                <h3>Redes</h3>
+            </div>
+
+            <div class="oferta-card">
+                <h3>Inglés Técnico</h3>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+
+        <div class="footer-contenido">
+
+            <div class="footer-logo">
+                <img src="../logo.png" alt="Logo OpenMind Tech">
+                <h3>OpenMind Tech</h3>
+            </div>
+
+            <div class="footer-copy">
+                <p>© 2026 OpenMind Tech - Todos los derechos reservados.</p>
+            </div>
+
+        </div>
+
+    </footer>
+
+    <!-- MODAL LOGIN -->
+    <div id="modalLogin" class="modal oculto">
+
+        <div class="modal-contenido">
+
+            <span class="cerrar" data-modal="modalLogin">&times;</span>
+
+            <h2>Iniciar sesión</h2>
+
+            <form id="formLogin">
+
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="Correo electrónico"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="Contraseña"
+                    required
+                >
+
+                <button type="submit" class="btn-primary">
+                    Ingresar
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+        <!-- MODAL REGISTRO -->
+    <div id="modalRegister" class="modal oculto">
+
+        <div class="modal-contenido">
+
+            <span class="cerrar" data-modal="modalRegister">&times;</span>
+
+            <h2>Registrarse</h2>
+
+            <form id="formRegister">
+
+                <input
+                    type="text"
+                    id="registerNombre"
+                    placeholder="Nombre"
+                    required
+                >
+
+                <input
+                    type="text"
+                    id="registerApellido"
+                    placeholder="Apellido"
+                    required
+                >
+
+                <label for="registerFecha">
+                    Fecha de nacimiento
+                </label>
+
+                <input
+                    type="date"
+                    id="registerFecha"
+                    required
+                >
+
+                <input
+                    type="email"
+                    id="registerEmail"
+                    placeholder="Correo electrónico"
+                    required
+                >
+
+                <input
+                    type="text"
+                    id="registerComision"
+                    placeholder="Comisión"
+                    required
+                >
+
+                <input
+                    type="text"
+                    id="registerCarrera"
+                    placeholder="Carrera"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="registerPassword"
+                    placeholder="Contraseña"
+                    required
+                >
+
+                <button type="submit" class="btn-primary">
+                    Crear cuenta
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/navbar.js"></script>
+
+</body>
+
+</html>
