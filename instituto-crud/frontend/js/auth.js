@@ -53,7 +53,7 @@ document.getElementById("formLogin")
         "usuario",
         JSON.stringify(usuario)
     );
-
+    localStorage.setItem("rolUsuario", rol); 
     window.location.reload();
 });
 
