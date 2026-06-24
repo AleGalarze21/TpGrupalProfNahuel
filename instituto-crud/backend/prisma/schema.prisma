@@ -7,13 +7,16 @@ datasource db {
 }
 
 model alumno {
-  id        Int      @id @default(autoincrement())
-  nombre    String
-  apellido  String
-  email     String   @unique(map: "Alumno_email_key")
-  curso     String
-  edad      Int
-  createdAt DateTime @default(now())
+  id               Int      @id @default(autoincrement())
+  nombre           String
+  apellido         String
+  fechaNacimiento  DateTime
+  email            String   @unique
+  comision         Int
+  carrera          String
+  legajo           String   @unique
+  activo           Boolean  @default(true)
+  createdAt        DateTime @default(now())
 }
 
 model usuario {
